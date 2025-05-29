@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Rozmowa z {{ character.name }}{% endblock %}
+
+{% block content %}
+<section class="chat-fullscreen">
+  <div class="container-fluid h-100 d-flex align-items-center justify-content-center">
+    <div class="card h-100 d-flex flex-column">
+
+      <!-- Header -->
+      <div class="card-header d-flex align-items-center gap-2 text-white rounded-top">
+        <a href="/" class="text-white"><i class="fas fa-arrow-left"></i></a>
+        
+        {% if character.avatar_url %}
+          <img src="{{ character.avatar_url }}" onerror="this.onerror=null;this.src='{% static 'img/default-avatar.png' %}';" alt="avatar" class="rounded-circle"">
+        {% else %}
+          <img src="{% static 'img/default-avatar.png' %}" alt="avatar" class="rounded-circle">
+        {% endif %}
+      
+        <div class="text-start">
+          <h6 class="mb-0">{{ character.name }}</h6>
+          <p class="mb-0 small fw-normal">{{ character.header_description|truncatewords:20 }}</p>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="card-body" id="chat-body">
+        <div id="messages">
+          {% for message in messages %}
+            <div id="message-{{ forloop.counter }}">
+              {% if message.is_user %}
+                <div class="d-flex flex-row justify-content-end mb-4 pt-1">
+                  <div class="chat-bubble ai newest user">{{ message.content }}</div>
+                </div>
+              {% else %}
+              <div class="d-flex flex-row justify-content-start ms-2 mb-4 pt-1">
+                {% if character.avatar_url %}
+                  <img src="{{ character.avatar_url }}"
+                       onerror="this.onerror=null;this.src='{% static 'img/default-avatar.png' %}';"
+                       class="rounded-circle me-2"
+                       style="width: 40px; height: 40px; object-fit: cover;">
+                {% endif %}
+                <div class="chat-bubble ai newest d-flex flex-column">
+                  {% if forloop.last and message.is_typing %}
+                    <span class="typing-text m-0 p-0" data-content="{{ message.content|escapejs }}"></span>
+                    <div class="typing-indicator d-flex align-items-center mt-1" style="gap: 4px;">
+                      <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                    </div>
+                  {% else %}
+                    <div class="compact-content m-0 p-0">{{ message.content }}</div>
+                  {% endif %}
+                </div>
+              </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          <div id="scroll-anchor"></div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="card-footer text-muted d-flex justify-content-start align-items-center p-3">
+        <form method="post" class="w-100 d-flex align-items-center">
+          {% csrf_token %}
+          <input type="hidden" name="conversation_id" value="{{ conversation_id }}">
+          <input type="hidden" name="character_id" value="{{ character.id }}">
+          <input name="content" type="text" class="form-control" placeholder="Napisz wiadomość...">
+          <button class="btn btn-primary ms-2" type="submit">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+    // Scroll the new message into view
+    function scrollToMessage(messageElem) {
+      if (!messageElem) return;
+      messageElem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    
+    // Wyświetlanie wiadomości użytkownika
+    function displayUserMessage(text) {
+      const messagesContainer = document.getElementById("messages");
+      if (!messagesContainer) return;
+    
+      const messageWrapper = document.createElement("div");
+      messageWrapper.innerHTML = `
+        <div class="d-flex flex-row justify-content-end mb-4 pt-1">
+          <div class="chat-bubble user animated-chat-bubble">${text}</div>
+        </div>
+      `;
+      messagesContainer.appendChild(messageWrapper);
+      scrollToMessage(messageWrapper);
+    }
+    
+    // Wyświetlanie wiadomości GPT z efektem pisania i przewijaniem w trakcie
+    async function displayGPTResponse(text) {
+        const messagesContainer = document.getElementById("messages");
+        const chatBody = document.getElementById("chat-body");
+        if (!messagesContainer || !chatBody) return;
+
+        const messageWrapper = document.createElement("div");
+        messageWrapper.innerHTML = `
+            <div class="d-flex flex-row justify-content-start ms-2 mb-4 pt-1">
+            <div class="chat-bubble ai"></div>
+            </div>
+        `;
+        messagesContainer.appendChild(messageWrapper);
+
+        const bubble = messageWrapper.querySelector(".chat-bubble.ai");
+
+        for (let char of text) {
+            bubble.textContent += char;
+            chatBody.scrollTop = chatBody.scrollHeight; //widoczność
+            await new Promise(resolve => setTimeout(resolve, 20)); // szybsze pisanie
+        }
+    }
+    
+    // Obsługa rozmowy
+    async function onUserMessageSend(text) {
+      if (text === "") return;
+      displayUserMessage(text);
+      const gptResponse = await generateGPTResponse(text);
+      await displayGPTResponse(gptResponse);
+    }
+    
+    // Obsługa formularza
+    document.addEventListener("DOMContentLoaded", () => {
+        const form = document.querySelector("form");
+        const chatInput = form.querySelector("input[name='content']");
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            displayUserMessage(text);
+            chatInput.value = "";
+
+            const dots = document.querySelector(".typing-indicator");
+            if (dots) dots.classList.add("visible");
+
+            try {
+            const res = await fetch("/api/chat/", {
+                method: "POST",
+                headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({
+                character_id: "{{ character.id }}",
+                message: text
+                })
+            });
+            const data = await res.json();
+            if (dots) dots.classList.remove("visible");
+            await displayGPTResponse(data.response);
+            } catch (error) {
+            console.error("Błąd API:", error);
+            }
+        });
+
+        requestAnimationFrame(() => {
+            setTimeout(() => {
+            const chatBody = document.getElementById("chat-body");
+            if (chatBody) {
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+
+            document.querySelectorAll('.chat-bubble.newest').forEach(bubble => {
+                bubble.classList.remove('newest');
+            });
+            }, 100);
+        });
+    });
+  
+    window.onload = () => {
+        setTimeout(() => {
+            const chatBody = document.getElementById("chat-body");
+            if (chatBody) {
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+        }, 300);
+
+        document.querySelectorAll('.chat-bubble.newest').forEach(bubble => {
+            bubble.classList.remove('newest');
+        });
+    };
+    </script>
+    {% endblock %}

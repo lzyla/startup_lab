@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Wybierz postać{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3>Wybierz postać asystenta AI</h3>
+    </div>
+    <div class="card-body">
+        {% if characters %}
+        <ul class="list-group">
+            {% for character in characters %}
+            <li class="list-group-item">
+                <a href="{% url 'chat' %}?character_id={{ character.id }}">{{ character.name }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>Brak postaci. Dodaj nową postać.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -3,6 +3,7 @@ from django.db import models
 class Character(models.Model):
     name = models.CharField(max_length=200)
     header_description = models.TextField(blank=True, null=True)  # opis postaci (krótki opis)
+    short_description = models.TextField(blank=True, null=True)  # dodatkowy opis wyświetlany na liście
     greeting = models.TextField(blank=True, null=True)  # pierwsza wiadomość widoczna w czacie
     description = models.TextField()  # opis i instrukcje dla GPT
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)  # wgrywany avatar

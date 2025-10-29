@@ -1,19 +1,33 @@
 {% extends "base.html" %}
-{% block title %}Wybierz postać{% endblock %}
+{% block title %}Wybierz inwestora/kę{% endblock %}
 {% block content %}
 <div class="card">
     <div class="card-header">
-        <h3>Wybierz postać asystenta AI</h3>
+        <h3>Wybierz inwestora/kę</h3>
     </div>
     <div class="card-body">
         {% if characters %}
-        <ul class="list-group">
+        <div class="character-selection">
             {% for character in characters %}
-            <li class="list-group-item">
-                <a href="{% url 'chat' %}?character_id={{ character.id }}">{{ character.name }}</a>
-            </li>
+            <a class="character-tile" href="{% url 'chat' %}?character_id={{ character.id }}">
+                <div class="character-avatar">
+                    {% if character.display_avatar %}
+                    <img src="{{ character.display_avatar }}" alt="{{ character.name }}">
+                    {% else %}
+                    <div class="avatar-placeholder">{{ character.name|first|default:"?" }}</div>
+                    {% endif %}
+                </div>
+                <div class="character-meta">
+                    <h4 class="character-name">{{ character.name }}</h4>
+                    {% if character.short_description %}
+                    <p class="character-short-description">{{ character.short_description }}</p>
+                    {% elif character.header_description %}
+                    <p class="character-short-description">{{ character.header_description }}</p>
+                    {% endif %}
+                </div>
+            </a>
             {% endfor %}
-        </ul>
+        </div>
         {% else %}
         <p>Brak postaci. Dodaj nową postać.</p>
         {% endif %}

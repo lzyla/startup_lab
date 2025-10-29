@@ -42,8 +42,8 @@ footer {
     width: 100%;
     max-width: 600px;
     margin: 0 auto;
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 }
 
 .navbar-logo-slot {
@@ -53,12 +53,15 @@ footer {
     width: 100%;
     max-width: 600px;
     padding: 0;
+    text-align: center;
 }
 
 .navbar-logo-img {
-    width: 100%;
-    height: auto;
     display: block;
+    margin: 0 auto;
+    width: auto;
+    max-width: 100%;
+    height: auto;
     object-fit: contain;
 }
 

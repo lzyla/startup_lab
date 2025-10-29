@@ -288,7 +288,7 @@ footer {
     text-decoration: none;
     color: inherit;
     box-shadow: 0 6px 16px rgba(99, 86, 158, 0.12);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    transition: transform 0.18s ease, box-shadow 0.2s ease, background-color 0.2s ease, filter 0.2s ease;
     margin-bottom: 1rem;
 }
 
@@ -296,9 +296,12 @@ footer {
     margin-bottom: 0;
 }
 
-.character-tile:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 24px rgba(99, 86, 158, 0.18);
+.character-tile:hover,
+.character-tile:focus-visible {
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 14px 26px rgba(99, 86, 158, 0.22);
+    background-color: rgba(163, 140, 192, 0.18);
+    filter: saturate(1.08);
 }
 
 .character-avatar {
@@ -456,6 +459,10 @@ footer {
     .chat-bubble.ai,
     .chat-bubble.user {
         animation: none !important;
+    }
+    .character-tile:hover,
+    .character-tile:focus-visible {
+        transform: none;
     }
 }
 .typing-indicator {

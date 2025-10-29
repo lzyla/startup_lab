@@ -11,15 +11,16 @@
 </head>
 <body style="margin: 0; padding: 0;">
     {% if not hide_navbar %}
-    <nav class="navbar navbar-dark bg-primary navbar-logo-bar">
-        <div class="container">
+    <nav class="navbar navbar-light bg-white navbar-logo-bar">
+        <div class="container navbar-logo-container">
             <a class="navbar-brand navbar-logo-slot" href="{% url 'character_list' %}" aria-label="Strona główna">
+                <img src="{% static 'img/startup-lab-logo.png' %}" alt="StartupLab – Porozmawiaj z inwestorem" class="navbar-logo-img">
             </a>
         </div>
     </nav>
     {% endif %}
     {% block content %}{% endblock %}
-    <footer class="bg-primary text-white text-center py-3">
+    <footer class="footer-bar text-white text-center py-3">
         © 2025 Asystent AI - Projekt MVP
     </footer>
 </body>

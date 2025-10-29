@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 
 body {
-    background: linear-gradient(to bottom right, #f0f4ff, #ffffff);
+    background: linear-gradient(to bottom right, #ede7f6, #ffffff);
     font-family: 'Lato', 'Segoe UI', sans-serif;
     height: 100%;
     margin: 0;
@@ -17,25 +17,45 @@ html, body {
 
 footer {
     display: none;
+    background-color: #63569e;
+    color: #ffffff;
+}
+
+.footer-bar {
+    background-color: #63569e;
 }
 
 .navbar-logo-bar {
-    min-height: 64px;
+    min-height: 80px;
     display: flex;
     align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    border-bottom: 1px solid rgba(99, 86, 158, 0.1);
+    padding: 0.35rem 0;
+}
+
+.navbar-logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
 }
 
 .navbar-logo-slot {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 180px;
-    height: 48px;
+    width: 100%;
+    max-width: 600px;
+    padding: 0.25rem 1.5rem;
 }
 
-.navbar-logo-slot img {
-    max-height: 100%;
-    width: auto;
+.navbar-logo-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
 }
 
 .full-height {
@@ -95,7 +115,7 @@ footer {
     z-index: -1;
 }
 .card-header {
-    background-color: #0d6efd !important;
+    background-color: #63569e !important;
     color: #fff;
     padding: 0.3rem 0.1rem 0.5rem 1rem !important; 
     font-weight: bold;
@@ -167,33 +187,58 @@ footer {
     justify-content: center;
 }
 
+.btn-primary {
+    background-color: #63569e;
+    border-color: #63569e;
+    color: #ffffff;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: #524784;
+    border-color: #524784;
+    color: #ffffff;
+}
+
+.btn-primary:disabled {
+    background-color: rgba(99, 86, 158, 0.5);
+    border-color: rgba(99, 86, 158, 0.5);
+}
+
 .message-ai {
-    background-color: #fff;
+    background-color: #a38cc0;
     border-radius: 16px;
     padding: 10px 16px;
     margin: 6px 0;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    animation: bubbleInLeft 0.42s cubic-bezier(0.23, 1, 0.32, 1) both, pulseBubble 7s ease-in-out infinite 0.8s;
+    transform-origin: left center;
+    color: #ffffff;
 }
 
 .message-user {
-    background: linear-gradient(135deg, #0d6efd, #378eff);
-    color: white;
+    background: #a38cc0;
+    color: #fff;
     border-radius: 16px;
     padding: 10px 16px;
     margin: 6px 0;
     max-width: 80%;
+    animation: bubbleInRight 0.42s cubic-bezier(0.23, 1, 0.32, 1) both, pulseBubble 7s ease-in-out infinite 0.8s;
+    transform-origin: right center;
 }
 
 .bg-user {
-    background: linear-gradient(135deg, #0d6efd, #3c8bff);
+    background: #63569e;
     color: white;
-    box-shadow: 0 4px 8px rgba(0, 102, 255, 0.2);
+    box-shadow: 0 4px 8px rgba(99, 86, 158, 0.3);
 }
 
 .bg-ai {
-    background: white;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-    border: 1px solid #e0e0e0;
+    background: #63569e;
+    box-shadow: 0 2px 6px rgba(99, 86, 158, 0.24);
+    border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .bg-ai.newest {
@@ -201,7 +246,7 @@ footer {
 }
 
 .chat-bubble {
-    background: white;
+    background: #a38cc0;
     border-radius: 18px;
     padding: 10px 14px;
     margin: 6px 0;
@@ -210,11 +255,14 @@ footer {
     display: inline-block;
     font-size: 0.9rem;
     white-space: pre-wrap;
+    will-change: transform;
+    color: #ffffff;
 }
 
 .chat-bubble.ai {
     margin-right: auto;
-    animation: bubbleInLeft 0.4s ease-out;
+    animation: bubbleInLeft 0.42s cubic-bezier(0.23, 1, 0.32, 1) both, pulseBubble 7s ease-in-out infinite 0.8s;
+    transform-origin: left center;
     padding: 10px 14px;
     margin-left: 2px !important;
 }
@@ -233,7 +281,7 @@ footer {
     padding: 1rem;
     text-decoration: none;
     color: inherit;
-    box-shadow: 0 6px 16px rgba(13, 110, 253, 0.08);
+    box-shadow: 0 6px 16px rgba(99, 86, 158, 0.12);
     transition: transform 0.15s ease, box-shadow 0.15s ease;
     margin-bottom: 1rem;
 }
@@ -244,7 +292,7 @@ footer {
 
 .character-tile:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(13, 110, 253, 0.12);
+    box-shadow: 0 12px 24px rgba(99, 86, 158, 0.18);
 }
 
 .character-avatar {
@@ -253,7 +301,7 @@ footer {
     height: 64px;
     border-radius: 50%;
     overflow: hidden;
-    background: linear-gradient(135deg, rgba(13, 110, 253, 0.2), rgba(55, 142, 255, 0.3));
+    background: linear-gradient(135deg, rgba(99, 86, 158, 0.35), rgba(150, 134, 204, 0.45));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -286,7 +334,7 @@ footer {
     margin: 0;
     font-size: 1.1rem;
     font-weight: 700;
-    color: #0d6efd;
+    color: #63569e;
 }
 
 .character-short-description {
@@ -297,9 +345,11 @@ footer {
 }
 
 .chat-bubble.user {
-    background: linear-gradient(135deg, #0d6efd, #378eff);
+    background: #a38cc0;
     color: #fff;
     margin-left: auto;
+    animation: bubbleInRight 0.42s cubic-bezier(0.23, 1, 0.32, 1) both, pulseBubble 7s ease-in-out infinite 0.8s;
+    transform-origin: right center;
 }
 
 #messages {
@@ -310,10 +360,6 @@ footer {
 
 #messages .mb-4 {
     margin-bottom: 0 !important;
-}
-
-.chat-bubble.ai.newest {
-    animation: pulseBubble 0.5s ease;
 }
 
 .chat-bubble .typing-text,
@@ -329,9 +375,9 @@ footer {
 }
 
 @keyframes pulse {
-    0% { transform: scale(1); background-color: #fff; }
-    50% { transform: scale(1.02); background-color: #f0f4ff; }
-    100% { transform: scale(1); background-color: #fff; }
+    0% { transform: scale(1); background-color: #a38cc0; }
+    50% { transform: scale(1.02); background-color: #b9a5d3; }
+    100% { transform: scale(1); background-color: #a38cc0; }
 }
 
 @keyframes fadeInUp {
@@ -345,12 +391,14 @@ footer {
 }
 
 @keyframes bubbleInLeft {
-    0% { opacity: 0; transform: translateX(-30px) scale(0.95); }
+    0% { opacity: 0; transform: translateX(-22px) scale(0.78); }
+    55% { opacity: 1; transform: translateX(4px) scale(1.05); }
     100% { opacity: 1; transform: translateX(0) scale(1); }
 }
 
 @keyframes bubbleInRight {
-    0% { opacity: 0; transform: translateX(30px) scale(0.95); }
+    0% { opacity: 0; transform: translateX(22px) scale(0.78); }
+    55% { opacity: 1; transform: translateX(-4px) scale(1.05); }
     100% { opacity: 1; transform: translateX(0) scale(1); }
 }
 
@@ -360,9 +408,8 @@ footer {
 }
 
 @keyframes pulseBubble {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.5); }
-    100% { transform: scale(1); }
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.015); }
 }
 
 @keyframes popInFade {
@@ -395,6 +442,16 @@ footer {
     animation: scaleUp 0.2s ease-out;
 }
 */
+
+@media (prefers-reduced-motion: reduce) {
+    .message-ai,
+    .message-user,
+    .chat-bubble,
+    .chat-bubble.ai,
+    .chat-bubble.user {
+        animation: none !important;
+    }
+}
 .typing-indicator {
     display: none;
     align-items: center;
@@ -448,11 +505,11 @@ footer {
 .character-card {
     display: flex;
     align-items: center;
-    background-color: #0d6efd;
+    background-color: #63569e;
     color: white;
     padding: 1rem;
     border-radius: 1rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(99, 86, 158, 0.25);
     margin-bottom: 1rem;
     width: 100%;
     max-width: 500px;

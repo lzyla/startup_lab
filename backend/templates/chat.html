@@ -37,12 +37,12 @@
                 {% if character.display_avatar %}
                   <img src="{{ character.display_avatar }}"
                        onerror="this.onerror=null;this.src='{% static 'img/default-avatar.png' %}';"
-                       class="rounded-circle me-2"
-                       style="width: 40px; height: 40px; object-fit: cover;">
+                       class="rounded-circle me-2 chat-avatar"
+                       style="width: 60px; height: 60px; object-fit: cover;">
                 {% else %}
                   <img src="{% static 'img/default-avatar.png' %}"
-                       class="rounded-circle me-2"
-                       style="width: 40px; height: 40px; object-fit: cover;">
+                       class="rounded-circle me-2 chat-avatar"
+                       style="width: 60px; height: 60px; object-fit: cover;">
                 {% endif %}
                 <div class="chat-bubble ai newest d-flex flex-column">
                   {% if forloop.last and message.is_typing %}
@@ -113,7 +113,7 @@ const CONVERSATION_ID = "{{ conversation_id }}";
         const messageWrapper = document.createElement("div");
         messageWrapper.innerHTML = `
             <div class="d-flex flex-row justify-content-start ms-2 mb-4 pt-1 chat-row">
-                <img src="${RESOLVED_AVATAR_URL}" class="rounded-circle me-2 ai-avatar" style="width: 40px; height: 40px; object-fit: cover;">
+                <img src="${RESOLVED_AVATAR_URL}" class="rounded-circle me-2 ai-avatar" style="width: 60px; height: 60px; object-fit: cover;">
                 <div class="chat-bubble ai"></div>
             </div>
         `;

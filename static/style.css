@@ -40,6 +40,10 @@ footer {
     align-items: center;
     justify-content: center;
     width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .navbar-logo-slot {
@@ -48,7 +52,7 @@ footer {
     justify-content: center;
     width: 100%;
     max-width: 600px;
-    padding: 0.25rem 1.5rem;
+    padding: 0;
 }
 
 .navbar-logo-img {
@@ -133,8 +137,8 @@ footer {
 }
 
 .card-header img {
-    width: 60px;
-    height: 60px;
+    width: 90px;
+    height: 90px;
     object-fit: cover;
     border-radius: 50%;
     box-shadow: 0 0 0 0px rgba(255, 255, 255, 0.6);
@@ -208,7 +212,7 @@ footer {
 }
 
 .message-ai {
-    background-color: #a38cc0;
+    background-color: rgba(163, 140, 192, 0.9);
     border-radius: 16px;
     padding: 10px 16px;
     margin: 6px 0;
@@ -219,7 +223,7 @@ footer {
 }
 
 .message-user {
-    background: #a38cc0;
+    background: rgba(163, 140, 192, 0.9);
     color: #fff;
     border-radius: 16px;
     padding: 10px 16px;
@@ -246,7 +250,7 @@ footer {
 }
 
 .chat-bubble {
-    background: #a38cc0;
+    background: rgba(163, 140, 192, 0.9);
     border-radius: 18px;
     padding: 10px 14px;
     margin: 6px 0;
@@ -254,6 +258,8 @@ footer {
     max-width: 80%;
     display: inline-block;
     font-size: 0.9rem;
+    font-weight: 400;
+    line-height: 1.45;
     white-space: pre-wrap;
     will-change: transform;
     color: #ffffff;
@@ -375,9 +381,9 @@ footer {
 }
 
 @keyframes pulse {
-    0% { transform: scale(1); background-color: #a38cc0; }
-    50% { transform: scale(1.02); background-color: #b9a5d3; }
-    100% { transform: scale(1); background-color: #a38cc0; }
+    0% { transform: scale(1); background-color: rgba(163, 140, 192, 0.9); }
+    50% { transform: scale(1.02); background-color: rgba(185, 165, 211, 0.92); }
+    100% { transform: scale(1); background-color: rgba(163, 140, 192, 0.9); }
 }
 
 @keyframes fadeInUp {

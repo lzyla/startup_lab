@@ -3,8 +3,10 @@ from django.db import models
 class Character(models.Model):
     name = models.CharField(max_length=200)
     header_description = models.TextField(blank=True, null=True)  # opis postaci (krótki opis)
+    greeting = models.TextField(blank=True, null=True)  # pierwsza wiadomość widoczna w czacie
     description = models.TextField()  # opis i instrukcje dla GPT
-    avatar_url = models.URLField(blank=True, null=True)  # nowe pole, jeśli potrzebujesz
+    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)  # wgrywany avatar
+    avatar_url = models.URLField(blank=True, null=True)  # zewnętrzny avatar (opcjonalnie)
 
     class Meta:
         verbose_name = "Postać AI"
@@ -12,6 +14,15 @@ class Character(models.Model):
     
     def __str__(self):
         return self.name
+
+    @property
+    def display_avatar(self):
+        """Prefer local upload, then external URL."""
+        if self.avatar:
+            return self.avatar.url
+        if self.avatar_url:
+            return self.avatar_url
+        return None
 
 class Conversation(models.Model):
     character = models.ForeignKey(Character, on_delete=models.CASCADE, related_name='conversations')

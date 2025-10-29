@@ -11,8 +11,8 @@
       <div class="card-header d-flex align-items-center gap-2 text-white rounded-top">
         <a href="/" class="text-white"><i class="fas fa-arrow-left"></i></a>
         
-        {% if character.avatar_url %}
-          <img src="{{ character.avatar_url }}" onerror="this.onerror=null;this.src='{% static 'img/default-avatar.png' %}';" alt="avatar" class="rounded-circle"">
+        {% if character.display_avatar %}
+          <img src="{{ character.display_avatar }}" onerror="this.onerror=null;this.src='{% static 'img/default-avatar.png' %}';" alt="avatar" class="rounded-circle">
         {% else %}
           <img src="{% static 'img/default-avatar.png' %}" alt="avatar" class="rounded-circle">
         {% endif %}
@@ -29,14 +29,18 @@
           {% for message in messages %}
             <div id="message-{{ forloop.counter }}">
               {% if message.is_user %}
-                <div class="d-flex flex-row justify-content-end mb-4 pt-1">
-                  <div class="chat-bubble ai newest user">{{ message.content }}</div>
+                <div class="d-flex flex-row justify-content-end mb-4 pt-1 chat-row">
+                  <div class="chat-bubble user newest">{{ message.content }}</div>
                 </div>
               {% else %}
-              <div class="d-flex flex-row justify-content-start ms-2 mb-4 pt-1">
-                {% if character.avatar_url %}
-                  <img src="{{ character.avatar_url }}"
+              <div class="d-flex flex-row justify-content-start ms-2 mb-4 pt-1 chat-row">
+                {% if character.display_avatar %}
+                  <img src="{{ character.display_avatar }}"
                        onerror="this.onerror=null;this.src='{% static 'img/default-avatar.png' %}';"
+                       class="rounded-circle me-2"
+                       style="width: 40px; height: 40px; object-fit: cover;">
+                {% else %}
+                  <img src="{% static 'img/default-avatar.png' %}"
                        class="rounded-circle me-2"
                        style="width: 40px; height: 40px; object-fit: cover;">
                 {% endif %}
@@ -64,7 +68,7 @@
           {% csrf_token %}
           <input type="hidden" name="conversation_id" value="{{ conversation_id }}">
           <input type="hidden" name="character_id" value="{{ character.id }}">
-          <input name="content" type="text" class="form-control" placeholder="Napisz wiadomość...">
+          <input name="content" type="text" class="form-control" placeholder="Rozpocznij rozmowę">
           <button class="btn btn-primary ms-2" type="submit">
             <i class="fas fa-paper-plane"></i>
           </button>
@@ -74,6 +78,11 @@
   </div>
 </section>
 <script>
+const DEFAULT_AVATAR_URL = "{% static 'img/default-avatar.png' %}";
+const CHARACTER_AVATAR_URL = "{{ character.display_avatar|default_if_none:''|escapejs }}";
+const RESOLVED_AVATAR_URL = CHARACTER_AVATAR_URL || DEFAULT_AVATAR_URL;
+const CONVERSATION_ID = "{{ conversation_id }}";
+
     // Scroll the new message into view
     function scrollToMessage(messageElem) {
       if (!messageElem) return;
@@ -87,7 +96,7 @@
     
       const messageWrapper = document.createElement("div");
       messageWrapper.innerHTML = `
-        <div class="d-flex flex-row justify-content-end mb-4 pt-1">
+        <div class="d-flex flex-row justify-content-end mb-4 pt-1 chat-row">
           <div class="chat-bubble user animated-chat-bubble">${text}</div>
         </div>
       `;
@@ -103,13 +112,21 @@
 
         const messageWrapper = document.createElement("div");
         messageWrapper.innerHTML = `
-            <div class="d-flex flex-row justify-content-start ms-2 mb-4 pt-1">
-            <div class="chat-bubble ai"></div>
+            <div class="d-flex flex-row justify-content-start ms-2 mb-4 pt-1 chat-row">
+                <img src="${RESOLVED_AVATAR_URL}" class="rounded-circle me-2 ai-avatar" style="width: 40px; height: 40px; object-fit: cover;">
+                <div class="chat-bubble ai"></div>
             </div>
         `;
         messagesContainer.appendChild(messageWrapper);
 
         const bubble = messageWrapper.querySelector(".chat-bubble.ai");
+        const avatarImg = messageWrapper.querySelector(".ai-avatar");
+        if (avatarImg) {
+            avatarImg.onerror = function () {
+                this.onerror = null;
+                this.src = DEFAULT_AVATAR_URL;
+            };
+        }
 
         for (let char of text) {
             bubble.textContent += char;
@@ -137,6 +154,10 @@
             if (!text) return;
 
             displayUserMessage(text);
+            if (!chatInput.dataset.placeholderCleared) {
+                chatInput.placeholder = "";
+                chatInput.dataset.placeholderCleared = "true";
+            }
             chatInput.value = "";
 
             const dots = document.querySelector(".typing-indicator");
@@ -151,14 +172,21 @@
                 },
                 body: JSON.stringify({
                 character_id: "{{ character.id }}",
+                conversation_id: CONVERSATION_ID,
                 message: text
                 })
             });
+            if (!res.ok) {
+                console.error("Błąd API:", res.status);
+                if (dots) dots.classList.remove("visible");
+                return;
+            }
             const data = await res.json();
             if (dots) dots.classList.remove("visible");
             await displayGPTResponse(data.response);
             } catch (error) {
             console.error("Błąd API:", error);
+            if (dots) dots.classList.remove("visible");
             }
         });
 

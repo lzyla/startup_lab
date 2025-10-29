@@ -2,7 +2,7 @@
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
 <h1>{{ title }}</h1>
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="form-group">
         <label for="id_name">Nazwa postaci</label>
@@ -13,8 +13,20 @@
         {{ form.header_description }}
     </div>
     <div class="form-group">
+        <label for="id_greeting">Powitanie (pierwsza wiadomość)</label>
+        {{ form.greeting }}
+    </div>
+    <div class="form-group">
         <label for="id_description">Opis i instrukcje</label>
         {{ form.description }}
+    </div>
+    <div class="form-group">
+        <label for="id_avatar">Avatar (upload)</label>
+        {{ form.avatar }}
+    </div>
+    <div class="form-group">
+        <label for="id_avatar_url">Adres URL avatara</label>
+        {{ form.avatar_url }}
     </div>
     <button type="submit" class="btn btn-primary">Zapisz</button>
 </form>
